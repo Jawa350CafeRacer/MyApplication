@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">My Application</string>
+
+    <string-array name="Warehouse">
+        <item>Main warehouse</item>
+        <item>Warehouse №1</item>
+        <item>Warehouse №2</item>
+        <item>Warehouse №3</item>
+        <item>Warehouse №4</item>
+        <item>Warehouse №5</item>
+    </string-array>
+
+   </resources>
