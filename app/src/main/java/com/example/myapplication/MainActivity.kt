@@ -60,13 +60,17 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
                 cameraCheckPermission()
                 galleryCheckPermissionW()
                 galleryCheckPermissionR()
-                camera()
-
+                if (allPPermissionGranted()&&allPPermissionGrantedW()&&allPPermissionGrantedR()) {
+                    camera()
+                }
             }
             R.id.item_3 -> {
                 galleryCheckPermissionW()
                 galleryCheckPermissionR()
-                gallery()
+                if (allPPermissionGrantedR()) {
+                    gallery()
+                }
+
             }
             R.id.item_4 -> {
 
@@ -85,8 +89,8 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
 
     private fun cameraCheckPermission() {
         if (allPPermissionGranted()){
-            //Toast.makeText(this,
-            //    "Camera permission", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,
+                "Camera permission", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
                 this, Constants.REQUIRED_PERMISSIONS_CAMERA,
@@ -96,8 +100,8 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
     }
     private fun galleryCheckPermissionR() {
         if (allPPermissionGrantedR()){
-           // Toast.makeText(this,
-           //     "Read permission", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,
+                "Read permission", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
                 this, Constants.REQUIRED_PERMISSIONS_READ,
@@ -107,8 +111,8 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
     }
     private fun galleryCheckPermissionW() {
         if (allPPermissionGrantedW()){
-            //Toast.makeText(this,
-            //"Write permission", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this,
+            "Write permission", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
                 this, Constants.REQUIRED_PERMISSIONS_WRITE,
@@ -213,9 +217,9 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
                     cameraCheckPermission()
                     galleryCheckPermissionW()
                     galleryCheckPermissionR()
-
-
-                    camera()
+                    if (allPPermissionGranted()&&allPPermissionGrantedW()&&allPPermissionGrantedR()) {
+                        camera()
+                    }
 
                     btnCamera.visibility = View.GONE
                     btnGallery.visibility = View.GONE
@@ -223,7 +227,10 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
                 btnGallery.visibility = View.VISIBLE
                 btnGallery.setOnClickListener {
                     galleryCheckPermissionR()
-                    gallery()
+                    if (allPPermissionGrantedR()) {
+                        gallery()
+                    }
+
 
                     btnCamera.visibility = View.GONE
                     btnGallery.visibility = View.GONE
