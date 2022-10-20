@@ -14,6 +14,7 @@ import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -57,12 +58,14 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
         when(item.itemId){
             R.id.item_2 -> {
                 cameraCheckPermission()
-                galleryCheckPermission()
+                galleryCheckPermissionW()
                 galleryCheckPermissionR()
                 camera()
+
             }
             R.id.item_3 -> {
-                galleryCheckPermission()
+                galleryCheckPermissionW()
+                galleryCheckPermissionR()
                 gallery()
             }
             R.id.item_4 -> {
@@ -80,81 +83,53 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
         return super.onContextItemSelected(item)
     }
 
-    private fun init(){
-        binding.apply {
-
-            val warehouse = resources.getStringArray(R.array.Warehouse)
-            val warehouseAdapter = ArrayAdapter(this@MainActivity, R.layout.dropdown_item, warehouse)
-            binding.autoCompleteTextView3.setAdapter(warehouseAdapter)
-            rcView.layoutManager = GridLayoutManager(this@MainActivity, 5)
-            rcView.adapter = adapter
-            buttonAdd.setOnClickListener{
-
-                btnCamera.visibility = View.VISIBLE
-                btnCamera.setOnClickListener {
-
-                cameraCheckPermission()
-                    galleryCheckPermission()
-                    galleryCheckPermissionR()
-
-                    camera()
-
-                    btnCamera.visibility = View.GONE
-                    btnGallery.visibility = View.GONE
-                }
-                btnGallery.visibility = View.VISIBLE
-                btnGallery.setOnClickListener {
-                    galleryCheckPermission()
-                        gallery()
-
-                    btnCamera.visibility = View.GONE
-                    btnGallery.visibility = View.GONE
-                }
-            }
-        }
-    }
-
     private fun cameraCheckPermission() {
         if (allPPermissionGranted()){
+            //Toast.makeText(this,
+            //    "Camera permission", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
-                this, Constants.REQUIRED_PERMISSIONS,
+                this, Constants.REQUIRED_PERMISSIONS_CAMERA,
                 Constants.REQUEST_CODE_PERMISSIONS
-            )
-        }
-    }
-    private fun galleryCheckPermission() {
-        if (allPPermissionGrantedG()){
-        } else {
-            ActivityCompat.requestPermissions(
-                this, Constants.REQUIRED_PERMISSIONS,
-                Constants.REQUEST_CODE_PERMISSIONS,
             )
         }
     }
     private fun galleryCheckPermissionR() {
         if (allPPermissionGrantedR()){
+           // Toast.makeText(this,
+           //     "Read permission", Toast.LENGTH_SHORT).show()
         } else {
             ActivityCompat.requestPermissions(
-                this, Constants.REQUIRED_PERMISSIONS,
+                this, Constants.REQUIRED_PERMISSIONS_READ,
+                Constants.REQUEST_CODE_PERMISSIONS,
+            )
+        }
+    }
+    private fun galleryCheckPermissionW() {
+        if (allPPermissionGrantedW()){
+            //Toast.makeText(this,
+            //"Write permission", Toast.LENGTH_SHORT).show()
+        } else {
+            ActivityCompat.requestPermissions(
+                this, Constants.REQUIRED_PERMISSIONS_WRITE,
                 Constants.REQUEST_CODE_PERMISSIONS,
             )
         }
     }
     private fun allPPermissionGranted() =
-        Constants.REQUIRED_PERMISSIONS.all {
-            ContextCompat.checkSelfPermission(
-                baseContext, it
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    private fun allPPermissionGrantedG() =
-        Constants.REQUIRED_PERMISSIONS_G.all {
+        Constants.REQUIRED_PERMISSIONS_CAMERA.all {
             ContextCompat.checkSelfPermission(
                 baseContext, it
             ) == PackageManager.PERMISSION_GRANTED
         }
     private fun allPPermissionGrantedR() =
-        Constants.REQUIRED_PERMISSIONS_R.all {
+        Constants.REQUIRED_PERMISSIONS_READ.all {
+            ContextCompat.checkSelfPermission(
+                baseContext, it
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+    private fun allPPermissionGrantedW() =
+        Constants.REQUIRED_PERMISSIONS_WRITE.all {
             ContextCompat.checkSelfPermission(
                 baseContext, it
             ) == PackageManager.PERMISSION_GRANTED
@@ -220,6 +195,41 @@ class MainActivity : AppCompatActivity(), FotoAdapter.Listener {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
         val path = MediaStore.Images.Media.insertImage(context.contentResolver, bitmap, "Title", null)
         return Uri.parse(path.toString())
+    }
+
+    private fun init(){
+        binding.apply {
+
+            val warehouse = resources.getStringArray(R.array.Warehouse)
+            val warehouseAdapter = ArrayAdapter(this@MainActivity, R.layout.dropdown_item, warehouse)
+            binding.autoCompleteTextView3.setAdapter(warehouseAdapter)
+            rcView.layoutManager = GridLayoutManager(this@MainActivity, 5)
+            rcView.adapter = adapter
+            buttonAdd.setOnClickListener{
+
+                btnCamera.visibility = View.VISIBLE
+                btnCamera.setOnClickListener {
+
+                    cameraCheckPermission()
+                    galleryCheckPermissionW()
+                    galleryCheckPermissionR()
+
+
+                    camera()
+
+                    btnCamera.visibility = View.GONE
+                    btnGallery.visibility = View.GONE
+                }
+                btnGallery.visibility = View.VISIBLE
+                btnGallery.setOnClickListener {
+                    galleryCheckPermissionR()
+                    gallery()
+
+                    btnCamera.visibility = View.GONE
+                    btnGallery.visibility = View.GONE
+                }
+            }
+        }
     }
 }
 
